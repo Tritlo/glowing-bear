@@ -1314,7 +1314,7 @@ weechat.config(['$routeProvider',
 ]);
 
 
-weechat.directive('plugin', function($rootScope) {
+weechat.directive('plugin', ['$rootScope', function($rootScope) {
     /*
      * Plugin directive
      * Shows additional plugin content
@@ -1367,10 +1367,10 @@ weechat.directive('plugin', function($rootScope) {
             }
         }
     };
-});
+}]);
 
 
-weechat.directive('inputBar', function() {
+weechat.directive('inputBar', ['$rootScope', function() {
 
     return {
 
@@ -1380,7 +1380,8 @@ weechat.directive('inputBar', function() {
             inputId: '@inputId'
         },
 
-        controller: function($rootScope,
+        controller: ['$rootScope', '$scope', '$log', 'connection', 'models',
+                    function($rootScope,
                              $scope,
                              $element,
                              $log,
@@ -1654,6 +1655,6 @@ weechat.directive('inputBar', function() {
                     return true;
                 }
             };
-        }
+        }]
     };
-});
+}]);
