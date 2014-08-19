@@ -8,6 +8,8 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
     /*
      * Buffer class
      */
+
+
     this.Buffer = function(message) {
         // weechat properties
         var fullName = message.full_name;
@@ -15,6 +17,7 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
         var title = message.title;
         var number = message.number;
         var pointer = message.pointers[0];
+        var placeInBufList = "";
         var notify = 3; // Default 3 == message
         var lines = [];
         var requestedLines = 0;
@@ -235,6 +238,7 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
             addNick: addNick,
             delNick: delNick,
             updateNick: updateNick,
+            placeInBufList: placeInBufList,
             getNicklistByTime: getNicklistByTime,
             serverSortKey: serverSortKey,
             indent: indent,
@@ -414,6 +418,7 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
         this.model.buffers[buffer.id] = buffer;
     };
 
+
     /*
      * Returns the current active buffer
      *
@@ -481,11 +486,29 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
         return true;
     };
 
+
+     /*
+      * Gets the number of the buffer in the buffer list,
+      * used for labeling the alt-commands.
+      */
+
+    this.getPlaceInBufList = function(bufid){
+        var loc = Object.keys(this.model.buffers).indexOf(bufid);
+        if (loc < 9) return loc+1;
+        if (loc == 9) return 10;
+        return "";
+    };
+
     /*
      * Returns the buffer list
      */
     this.getBuffers = function() {
-        return this.model.buffers;
+        var buffers = this.model.buffers;
+        for(buffer in buffers){
+            /* put the correct label on the buffer */
+            buffers[buffer].placeInBufList = this.getPlaceInBufList(buffer);
+        }
+        return buffers;
     };
 
     /*
@@ -502,7 +525,7 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
      * @return the buffer object
      */
     this.getBuffer = function(bufferId) {
-        return this.model.buffers[bufferId];
+       return this.model.buffers[bufferId];
     };
 
     /*

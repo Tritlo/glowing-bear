@@ -230,7 +230,7 @@ $ openssl req -nodes -newkey rsa:4096 -keyout relay.pem -x509 -days 365 -out rel
           <li class="buffer" ng-class="{'active': buffer.active, 'indent': buffer.indent }" ng-repeat="(key, buffer) in (filteredBuffers = (getBuffers() | toArray | filter:{fullName:search} | filter:hasUnread | orderBy:predicate))">
             <a href="#" ng-click="setActiveBuffer(buffer.id)" title="{{ buffer.fullName }}">
               <span class="badge pull-right" ng-class="{'danger': buffer.notification}" ng-if="buffer.notification || buffer.unread" ng-bind="buffer.notification || buffer.unread"></span>
-              <span class="buffernumber">{{ buffer.id }}</span>
+              <span class="buffernumber" >{{ buffer.placeInBufList }}</span>
               <span class="buffername">{{ buffer.shortName || buffer.fullName }}</span>
             </a>
           </li>
