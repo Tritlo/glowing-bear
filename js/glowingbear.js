@@ -851,6 +851,7 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
     // If we are on mobile change some defaults
     // We use 968 px as the cutoff, which should match the value in glowingbear.css
     var nonicklist = false;
+    var nolabels = false;
     var noembed = false;
     var showtimestamp = true;
 
@@ -870,6 +871,8 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
     $store.bind($scope, "hotlistsync", true);
     // Save setting for displaying nicklist
     $store.bind($scope, "nonicklist", nonicklist);
+    // Save setting for displaying labels
+    $store.bind($scope, "nolabels", nolabels);
     // Save setting for displaying embeds
     $store.bind($scope, "noembed", noembed);
     // Save setting for channel ordering
@@ -1228,6 +1231,37 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
         }
         return true;
     };
+    // Set display of labels initially
+
+    // Watch model and update show setting when it changes
+    $scope.$watch('nolabels', function() {
+        var sheet = document.getElementById("bufnumstyle")
+        if (sheet)
+            sheet = sheet.sheet;
+        else sheet = (function() {
+            // Create the <style> tag
+            var style = document.createElement("style");
+            style.id = "bufnumstyle";
+
+            // Add a media (and/or media query) here if you'd like!
+            // style.setAttribute("media", "screen")
+            // style.setAttribute("media", "@media only screen and (max-width : 1024px)")
+
+            // WebKit hack :(
+            style.appendChild(document.createTextNode(""));
+
+            // Add the <style> element to the page
+            document.head.appendChild(style);
+            return style.sheet;
+            })();
+        stylesheeeet = sheet;
+        if(sheet.rules.length > 0)
+            sheet.removeRule(0);
+        if ($scope.nolabels)
+            sheet.addRule( ".buffernumber", "display : none",0);
+
+        console.log(sheet);
+    });
 
     // Watch model and update show setting when it changes
     $scope.$watch('nonicklist', function() {
